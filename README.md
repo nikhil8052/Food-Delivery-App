@@ -32,5 +32,3 @@ git clone https://github.com/nikhil8052/Food-Delivery-App.git
 
 ![Local Image](/images/10.png)
 
-
->>>>>>> origin/master
