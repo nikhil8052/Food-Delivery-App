@@ -1,0 +1,110 @@
+{% extends "layout/layout.html" %}
+
+
+{% block content %}
+
+
+ <!-- ======= About Section ======= -->
+ <section id="about" class="about mt-5">
+    <div class="container" data-aos="fade-up">
+
+      <div class="section-header">
+        <h2>About Dish</h2>
+        <p>Learn More <span>About Dish</span></p>
+      </div>
+
+      <div class="row gy-4">
+        <div class="col-lg-7 position-relative about-img" style="background-image: url(/media/{{dish.image}}) ;" data-aos="fade-up" data-aos-delay="150">
+          <div class="call-us position-absolute">
+            <h4>Click to Order</h4>
+          </div>
+        </div>
+        <div class="col-lg-5 d-flex align-items-start" data-aos="fade-up" data-aos-delay="300">
+          <div class="content ps-0 ps-lg-5">
+            <h1 class="fst-italic">
+              {{dish.name}}
+            </h1>
+            
+            <h6> Description </h6>
+            <p>
+
+                {{dish.description}}
+            </p>
+
+
+            <h6> Price </h6>
+            <p>
+
+                <b>${{dish.price}}</b>
+            </p>
+
+            <button id="rzp-button1" onclick="inciateRequest(this)" class="btn btn-dark btn-xs" >
+                Order Now 
+            </button>
+    
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section><!-- End About Section -->
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js" ></script> 
+
+  <script>
+    
+
+
+    function inciateRequest(e){
+
+      $(e).text('Iniciating')
+      var token=$('{% csrf_token %}').val()
+
+      console.log(token)
+      $.ajax({
+        url: '/dish/iniciate-payment',  // Replace with the actual URL of your Django view
+        method: 'POST',
+        dataType: 'json',
+        headers: {
+          'X-CSRFToken': token
+      },
+        success: function(res) {
+            console.log('Payment initiation successful:', res);
+
+            var order_id=''
+            if(res.status==200){
+               order_id=res.data.id
+
+               console.log( order_id, " order id ")
+               $(e).text('Order Now')
+   
+               var options = {
+                 "key": "rzp_test_gEZAuMhZoXFlf2", // Enter the Key ID generated from the Dashboard
+                 "amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                 "currency": "INR",
+                 "name": "Fasteat", //your business name
+                 "description": "Pay Now ",
+                 'order_id':order_id,
+                 "theme": {
+                     "color": "#3399cc"
+                 },
+                 "handler":function(response){
+                   paymentSuccess(response)
+                 }
+             };
+             var rzp1 = new Razorpay(options);
+             rzp1.open();
+
+
+            }
+          },
+        
+    });
+    
+    
+    }
+    </script>
+
+{% endblock content %}
+
+
