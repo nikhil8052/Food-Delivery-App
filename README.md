@@ -9,5 +9,5 @@ cd Ecommerce
 
 python3 manage.py runserver
 
-![Local Image](/home/nikhil/Pictures/Screenshot from 2023-11-04 10-03-38.png)
+![Local Image](/images/Screenshot from 2023-11-04 10-03-38.png)
 
